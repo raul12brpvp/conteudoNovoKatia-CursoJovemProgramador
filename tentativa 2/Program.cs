@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using tentativa_2.Data.Repositorio;
+using tentativa_2.Data.Repositorio.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+var connectionstring = builder.Configuration.GetConnectionString("StringConexao");
+builder.Services.AddDbContext<BancoContexto>(options => options.UseSqlServer(connectionstring));
+
+builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
 var app = builder.Build();
 

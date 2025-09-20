@@ -1,10 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using tentativa_2.Data.Repositorio.Interfaces;
 using tentativa_2.Models;
 
 namespace tentativa_2.Controllers
 {
     public class LoginController : Controller
     {
+        private readonly IUsuarioRepositorio _usuarioRepositorio;
+        public LoginController(IUsuarioRepositorio usuarioRepositorio)
+        {
+            _usuarioRepositorio = usuarioRepositorio;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -14,7 +21,10 @@ namespace tentativa_2.Controllers
         {
             try
             {
-                if (usuario.Email == "Raul@gmail" && usuario.Senha == "RR123")
+
+                var retorno = _usuarioRepositorio.ValidarUsuario(usuario);
+
+                if (retorno != null)
                 {
                     return RedirectToAction("Index", "Home");
                 }
@@ -28,6 +38,26 @@ namespace tentativa_2.Controllers
                 TempData["MsgErro"] = "Erro ao buscar dados do usuário";
             }
 
+            return View("Index");
+        }
+
+        public IActionResult Cadastro(Usuario usuario)
+        {
+            return View();
+        }
+
+        public IActionResult CadastrarUsuario(Usuario usuario)
+        {
+            try
+            {
+                _usuarioRepositorio.CadastrarUsuario(usuario);
+                return RedirectToAction("Index", "Login");
+            }
+            catch (Exception ex)
+            {
+                TempData["MsgErro"] = "Erro ao cadastrar usuário";
+            }
+                
             return View("Index");
         }
     }

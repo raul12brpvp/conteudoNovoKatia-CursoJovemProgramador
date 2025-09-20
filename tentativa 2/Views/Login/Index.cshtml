@@ -8,6 +8,14 @@
         @TempData["MsgErro"]
     </div>
 }
+
+@if (TempData["MsgErro"] != null)
+{
+    <div class="alert-success">
+        @TempData["MsgErro"]
+    </div>
+}
+
 @model Usuario
 
 <form class="row g-3" asp-controller="Login" asp-action="ValidaUsuario">
